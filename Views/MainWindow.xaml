@@ -1,0 +1,205 @@
+<Window x:Class="ImageLocker.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Image Locker"
+        Height="900"
+        Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF5F5F5">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Padding="14" CornerRadius="14" Background="White" BorderBrush="#FFD8D8D8" BorderThickness="1" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Image Locker" FontSize="24" FontWeight="Bold" />
+                    <TextBlock Margin="0,6,0,0"
+                               Foreground="#FF555555"
+                               Text="Hide one PNG image inside another using XOR, RGB-LSB, LMR, GA-selected embedding positions, embedded header+metadata, CRC32 validation, and parallel fitness evaluation." />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Padding="14" CornerRadius="14" Background="White" BorderBrush="#FFD8D8D8" BorderThickness="1" Margin="0,0,0,14">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Padding="24,10" Margin="0,0,10,0" Command="{Binding SetEmbedModeCommand}" Content="Embed" FontWeight="Bold" />
+                        <Button Padding="24,10" Command="{Binding SetExtractModeCommand}" Content="Extract" FontWeight="Bold" />
+                    </StackPanel>
+
+                    <Grid Margin="0,18,0,0">
+                        <Grid Visibility="{Binding IsEmbedMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Border Height="280" CornerRadius="12" Background="#FFE0E0E0" BorderBrush="#FFC9C9C9" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding PayloadPreview}" Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+                                <Button Margin="0,10,0,0" Padding="16,8" Command="{Binding BrowsePayloadCommand}" Content="Select Hidden Image" />
+                                <TextBlock Margin="0,10,0,0" FontWeight="SemiBold" Text="Hidden image (payload)" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF555555" Text="{Binding PayloadInfoText}" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF2F6B2F" Text="{Binding PayloadCapacityText}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="34" FontWeight="Bold" Text="+" Foreground="#FF606060" />
+
+                            <StackPanel Grid.Column="2">
+                                <Border Height="280" CornerRadius="12" Background="#FFE0E0E0" BorderBrush="#FFC9C9C9" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding CoverPreview}" Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+                                <Button Margin="0,10,0,0" Padding="16,8" Command="{Binding BrowseCoverCommand}" Content="Select Cover Image" />
+                                <TextBlock Margin="0,10,0,0" FontWeight="SemiBold" Text="Cover image" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF555555" Text="{Binding CoverInfoText}" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF2F6B2F" Text="{Binding CoverCapacityText}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="34" FontWeight="Bold" Text="→" Foreground="#FF606060" />
+
+                            <StackPanel Grid.Column="4">
+                                <Border Height="280" CornerRadius="12" Background="#FFE0E0E0" BorderBrush="#FFC9C9C9" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding ResultPreview}" Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+                                <Button Margin="0,10,0,0" Padding="16,8" Command="{Binding EmbedCommand}" Content="Embed The Image" />
+                                <TextBlock Margin="0,10,0,0" FontWeight="SemiBold" Text="Stego result" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF555555" Text="Header and metadata are stored inside the stego PNG. No external embedding-map file is needed." />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Visibility="{Binding IsExtractMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Border Height="280" CornerRadius="12" Background="#FFE0E0E0" BorderBrush="#FFC9C9C9" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding StegoPreview}" Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+                                <Button Margin="0,10,0,0" Padding="16,8" Command="{Binding BrowseStegoInputCommand}" Content="Select Stego Image" />
+                                <TextBlock Margin="0,10,0,0" FontWeight="SemiBold" Text="Stego image" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF555555" Text="{Binding StegoInfoText}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="34" FontWeight="Bold" Text="→" Foreground="#FF606060" />
+
+                            <StackPanel Grid.Column="2">
+                                <Border Height="280" CornerRadius="12" Background="#FFE0E0E0" BorderBrush="#FFC9C9C9" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding ResultPreview}" Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+                                <Button Margin="0,10,0,0" Padding="16,8" Command="{Binding ExtractCommand}" Content="Extract The Image" />
+                                <TextBlock Margin="0,10,0,0" FontWeight="SemiBold" Text="Extracted result" />
+                                <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF555555" Text="{Binding ExtractInfoText}" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Row="2" Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Padding="14" CornerRadius="14" Background="White" BorderBrush="#FFD8D8D8" BorderThickness="1" Margin="0,0,14,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="110" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,8,10,8" VerticalAlignment="Center" Text="Encryption key:" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,8,0,8" Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,8,10,8" VerticalAlignment="Center" Text="Population size:" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,8,10,8" Text="{Binding PopulationSize, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Margin="0,8,0,8" VerticalAlignment="Center" Text="individuals" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,8,10,8" VerticalAlignment="Center" Text="Generations:" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,8,10,8" Text="{Binding Generations, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Margin="0,8,0,8" VerticalAlignment="Center" Text="rounds" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,8,10,8" VerticalAlignment="Center" Text="Mutation rate:" />
+                        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,8,10,8" Text="{Binding MutationRate, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Grid.Row="3" Grid.Column="2" Margin="0,8,0,8" VerticalAlignment="Center" Text="0-1" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,8,10,8" VerticalAlignment="Center" Text="Output folder:" />
+                        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,8,10,8" Text="{Binding OutputFolderPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Row="4" Grid.Column="2" Margin="0,8,0,8" Padding="10,4" Command="{Binding BrowseOutputFolderCommand}" Content="Browse" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Padding="14" CornerRadius="14" Background="White" BorderBrush="#FFD8D8D8" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock FontSize="18" FontWeight="Bold" Text="Output" />
+                        <TextBlock Margin="0,14,0,6" Text="Output file name:" />
+                        <TextBox Text="{Binding OutputFileName, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Margin="0,14,0,6" Text="Estimate:" />
+                        <TextBlock TextWrapping="Wrap" Foreground="#FF555555" Text="{Binding OperationEstimateText}" />
+                        <TextBlock Margin="0,14,0,6" Text="Warning:" />
+                        <TextBlock TextWrapping="Wrap" Foreground="#FF8A4B00" Text="{Binding CapacityWarningText}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="3" Padding="14" CornerRadius="14" Background="White" BorderBrush="#FFD8D8D8" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock FontSize="18" FontWeight="Bold" Text="Status" />
+
+                    <Border Margin="0,12,0,0" Padding="10" CornerRadius="10" Background="#FFF9F9F9" BorderBrush="#FFE0E0E0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Text="Progress" />
+                            <ProgressBar Margin="0,10,0,0"
+                                         Height="18"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="{Binding ProgressValue, Mode=OneWay}" />
+                            <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#FF444444" Text="{Binding ProgressText}" />
+                            <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#FF2F6B2F" Text="{Binding ProgressEtaText}" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBox Margin="0,12,0,0"
+                             Height="180"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding Status}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Window>
